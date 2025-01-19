@@ -40,6 +40,7 @@ void turn_off_leds() {
 }
 
 int main() {
+    // Inicializa o sistema
     stdio_init_all();
     setup();
 
@@ -48,22 +49,30 @@ int main() {
     gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
 
+    // Mensagem de inicialização
     uart_puts(UART_ID, "Hello, UART!\n");
-    printf("Sistema ok. Qual o comando UART?\n");
 
+    char command[20];
     while (true) {
-        char command[20];
+        // Lê comandos da UART1
+        int i = 0;
+        while (uart_is_readable(UART_ID)) {
+            char c = uart_getc(UART_ID);
+            if (c == '\n' || c == '\r') break;
+            if (i < sizeof(command) - 1) command[i++] = c;
+        }
+        command[i] = '\0'; // Termina a string
 
-        // Lê o comando do terminal
-        if(scanf("%19s", command) == 1) {
-            if(strcmp(command, "GREEN") == 0) {
-                turn_off_leds();   
-                gpio_put(LED_GREEN, 0); 
-
-                printf("Led verde ligado\n");
-            } else {
-                printf("Comando inválido.\n");
-            }
+        // Processa o comando recebido
+        if (strcmp(command, "GREEN") == 0) {
+            turn_off_leds();   
+            gpio_put(LED_GREEN, 0); 
+            uart_puts(UART_ID, "LED verde ligado\n");
+        } else if (strcmp(command, "OFF") == 0) {
+            turn_off_leds();
+            uart_puts(UART_ID, "Todos os LEDs desligados\n");
+        } else if (i > 0) {
+            uart_puts(UART_ID, "Comando invalido.\n");
         }
     }
 
