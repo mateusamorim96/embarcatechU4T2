@@ -28,10 +28,16 @@ void setup() {
     gpio_put(LED_RED, 0);
 }
 
+void turn_off_leds(){
+    gpio_put(LED_GREEN, 0);
+    gpio_put(LED_BLUE, 0);
+    gpio_put(LED_RED, 0);
+}
 
 int main()
 {
     stdio_init_all();
+    setup();
 
     // Set up our UART
     uart_init(UART_ID, BAUD_RATE);
@@ -47,9 +53,15 @@ int main()
     uart_puts(UART_ID, " Hello, UART!\n");
     
     // For more examples of UART use see https://github.com/raspberrypi/pico-examples/tree/master/uart
-
+    printf("Sistema ok. Qual o comando UART?\n");
     while (true) {
-        printf("Hello, world!\n");
+        char command[20];
+
+        if(scanf("%19s", command) == 1){
+            if(strcmp(command, "LED_GREEN") == 0){
+
+            }
+        }
         sleep_ms(1000);
     }
 }
