@@ -27,16 +27,16 @@ void setup() {
     gpio_set_dir(LED_RED, GPIO_OUT);
 
     // Apaga todos os LEDs ao iniciar
-    gpio_put(LED_GREEN, 1);
-    gpio_put(LED_BLUE, 1);
-    gpio_put(LED_RED, 1);
+    gpio_put(LED_GREEN, 0);
+    gpio_put(LED_BLUE, 0);
+    gpio_put(LED_RED, 0);
 }
 
 void turn_off_leds() {
     // Desliga todos os LEDs
-    gpio_put(LED_GREEN, 1);
-    gpio_put(LED_BLUE, 1);
-    gpio_put(LED_RED, 1);
+    gpio_put(LED_GREEN, 0);
+    gpio_put(LED_BLUE, 0);
+    gpio_put(LED_RED, 0);
 }
 
 int main() {
@@ -66,8 +66,12 @@ int main() {
         // Processa o comando recebido
         if (strcmp(command, "GREEN") == 0) {
             turn_off_leds();   
-            gpio_put(LED_GREEN, 0); 
+            gpio_put(LED_GREEN, 1); 
             uart_puts(UART_ID, "LED verde ligado\n");
+        } if (strcmp(command, "RED") == 0) {
+            turn_off_leds();   
+            gpio_put(LED_RED, 1); 
+            uart_puts(UART_ID, "LED vermelho ligado\n");
         } else if (strcmp(command, "OFF") == 0) {
             turn_off_leds();
             uart_puts(UART_ID, "Todos os LEDs desligados\n");
