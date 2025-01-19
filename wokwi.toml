@@ -1,3 +1,4 @@
 [wokwi]
 version = 1
 firmware = 'build/embarcatechU4T2.uf2'
+elf = 'build/embarcatechU4T2.elf'
