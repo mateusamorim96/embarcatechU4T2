@@ -19,6 +19,15 @@
 // Define o pino do buzzer
 #define BUZZER 21
 
+void setup() {
+    gpio_init(LED_GREEN);   //inicializa o pino 11 para o led verde
+    gpio_set_dir(LED_GREEN, GPIO_OUT);
+
+    gpio_put(LED_GREEN, 0);
+    gpio_put(LED_BLUE, 0);
+    gpio_put(LED_RED, 0);
+}
+
 
 int main()
 {
