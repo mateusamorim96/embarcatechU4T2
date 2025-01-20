@@ -38,6 +38,37 @@ void turn_off_leds() {
     gpio_put(LED_BLUE, 0);
     gpio_put(LED_RED, 0);
 }
+void BUZZER_CONFIG (uint gpio, float frequencia, float duty_cycle){
+    gpio_set_function(gpio, GPIO_FUNC_PWM); //DEFINE O PINO COMO SAÍDA PWM
+    uint slice_num = pwm_gpio_to_slice_num(gpio); //OBTEM O NUMERO DA SLICE ASSOCIADA AO PINO
+    uint channel = pwm_gpio_to_channel(gpio); //OBETEM O NÚMERO DO CANAL
+
+    float clk_div = 4.0f;  // DIVISOR DE CLOCK
+    uint32_t wrap = (uint32_t)((125e6 / (frequencia * clk_div)) - 1);
+   
+    // CONFIGURAÇÃO PWM
+    pwm_config config = pwm_get_default_config();
+    pwm_config_set_clkdiv(&config, clk_div);
+    pwm_config_set_wrap(&config, wrap);
+    pwm_init(slice_num, &config, true);
+    
+    // CONFIGURAÇÃO DUTY_CICLE
+     uint32_t level = (uint32_t)(wrap * duty_cycle);
+    pwm_set_chan_level(slice_num, channel, level);
+    pwm_set_enabled(slice_num, true);
+
+}
+void CONTROLE_BUZZER(){
+
+    BUZZER_CONFIG(BUZZER, 880.0f, 0.5f); //CONFIGURA FREQUENCIA E DUTY_CYCLE
+        sleep_ms(2000);
+        
+        
+        uint slice_num = pwm_gpio_to_slice_num(BUZZER);
+        uint channel = pwm_gpio_to_channel(BUZZER);
+        pwm_set_chan_level(slice_num, channel, 0);  //DESLIGAR BUZZER
+
+}
 
 int main() {
     // Inicializa o sistema
@@ -82,7 +113,11 @@ int main() {
             gpio_put(LED_GREEN, 1);
             gpio_put(LED_BLUE, 1);
             uart_puts(UART_ID, "LED branco ligado\n");
-        }else if (strcmp(command, "OFF") == 0) {
+        } else if (strcmp(command, 'BUZZER'))
+            CONTROLE_BUZZER();
+            uart_puts(UART_ID, "Buzzer ligado\n" );
+
+        else if (strcmp(command, "OFF") == 0) {
             turn_off_leds();
             uart_puts(UART_ID, "Todos os LEDs desligados\n");
         } else if (i > 0) {
