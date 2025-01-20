@@ -68,6 +68,10 @@ int main() {
             turn_off_leds();   
             gpio_put(LED_GREEN, 0); 
             uart_puts(UART_ID, "LED verde ligado\n");
+        } else if (strcmp(command, "BLUE") == 0) {
+            turn_off_leds();
+            gpio_put(LED_BLUE, 0);
+            uart_puts(UART_ID, "LED azul ligado\n");
         } else if (strcmp(command, "OFF") == 0) {
             turn_off_leds();
             uart_puts(UART_ID, "Todos os LEDs desligados\n");
